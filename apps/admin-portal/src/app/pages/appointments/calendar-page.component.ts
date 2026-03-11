@@ -12,34 +12,47 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
   imports: [CommonModule, DayViewComponent, WeekViewComponent, AppointmentModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="h-screen flex flex-col bg-gray-100">
-      <header class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div class="flex items-center justify-between flex-wrap gap-4">
-            <div class="flex items-center gap-4">
-              <h1 class="text-2xl font-bold text-gray-900">Gestión de Citas</h1>
-              <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                <button
-                  (click)="setViewMode('day')"
-                  [class]="viewMode() === 'day' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'"
-                  class="px-4 py-1.5 rounded-md text-sm font-medium transition-all"
-                >
-                  Día
-                </button>
-                <button
-                  (click)="setViewMode('week')"
-                  [class]="viewMode() === 'week' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'"
-                  class="px-4 py-1.5 rounded-md text-sm font-medium transition-all"
-                >
-                  Semana
-                </button>
+    <div class="h-screen flex flex-col bg-slate-50 font-sans">
+      <!-- Main Header with Glassmorphism -->
+      <header class="sticky top-0 z-30 w-full glass border-b border-slate-200/50 px-4 py-3 sm:px-6">
+        <div class="max-w-[1600px] mx-auto flex items-center justify-between">
+          <div class="flex items-center gap-8">
+            <div class="flex items-center gap-2">
+              <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
               </div>
+              <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight hidden sm:block">
+                CitaPremium
+              </h1>
             </div>
 
-            <div class="flex items-center gap-2">
+            <!-- View Toggler -->
+            <div class="flex items-center bg-slate-100/80 p-1 rounded-xl border border-slate-200/50">
+              <button
+                (click)="setViewMode('day')"
+                [class]="viewMode() === 'day' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'"
+                class="px-5 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200"
+              >
+                Día
+              </button>
+              <button
+                (click)="setViewMode('week')"
+                [class]="viewMode() === 'week' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'"
+                class="px-5 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200"
+              >
+                Semana
+              </button>
+            </div>
+          </div>
+
+          <!-- Navigation Controls -->
+          <div class="flex items-center gap-1 sm:gap-4">
+            <div class="flex items-center bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
               <button
                 (click)="navigatePrevious()"
-                class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600"
+                class="p-2.5 hover:bg-slate-50 transition-colors text-slate-600 border-r border-slate-100"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -48,18 +61,14 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
 
               <button
                 (click)="navigateToday()"
-                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                class="px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
               >
                 Hoy
               </button>
 
-              <span class="text-lg font-semibold text-gray-800 min-w-50 text-center">
-                {{ formattedDate() }}
-              </span>
-
               <button
                 (click)="navigateNext()"
-                class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600"
+                class="p-2.5 hover:bg-slate-50 transition-colors text-slate-600 border-l border-slate-100"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -67,21 +76,32 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
               </button>
             </div>
 
-            <button
-              (click)="openCreateModal()"
-              class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              </svg>
-              <span>Nueva Cita</span>
-            </button>
+            <div class="hidden lg:flex flex-col items-center min-w-48">
+              <span class="text-sm font-medium text-slate-500 uppercase tracking-widest text-[10px]">
+                {{ viewMode() === 'day' ? 'Fecha Seleccionada' : 'Rango de Semana' }}
+              </span>
+              <span class="text-base font-bold text-slate-800">
+                {{ formattedDate() }}
+              </span>
+            </div>
           </div>
+
+          <!-- Actions -->
+          <button
+            (click)="openCreateModal()"
+            class="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 transition-all duration-200 font-bold active:scale-95"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span class="hidden sm:inline">Nueva Cita</span>
+          </button>
         </div>
       </header>
 
-      <main class="flex-1 overflow-hidden p-4">
-        <div class="h-full max-w-7xl mx-auto bg-white rounded-xl shadow-sm overflow-hidden">
+      <!-- Main Content Area -->
+      <main class="flex-1 overflow-hidden p-6 lg:p-8">
+        <div class="h-full max-w-[1600px] mx-auto bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200/60 overflow-hidden animate-fade-in">
           @if (viewMode() === 'day') {
             <app-day-view
               [date]="selectedDate()"

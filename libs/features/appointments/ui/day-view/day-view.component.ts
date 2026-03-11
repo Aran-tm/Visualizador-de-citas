@@ -9,32 +9,35 @@ import { AppointmentCardComponent } from '../appointment-card/appointment-card.c
   imports: [CommonModule, AppointmentCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="flex flex-col h-full">
-      <div class="text-center py-3 border-b border-gray-200 bg-gray-50">
-        <div class="text-lg font-semibold text-gray-800">
-          {{ date() | date: 'EEEE d MMMM, y' }}
-        </div>
+    <div class="flex flex-col h-full bg-white select-none">
+      <!-- Day View Header -->
+      <div class="flex items-center px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+        <h2 class="text-xl font-bold text-slate-800">
+          {{ date() | date: 'EEEE d' }} <span class="text-slate-400 font-medium">de {{ date() | date: 'MMMM, y' }}</span>
+        </h2>
       </div>
 
       <div class="flex flex-1 overflow-hidden">
-        <div class="w-16 shrink-0 border-r border-gray-200 bg-gray-50 overflow-hidden">
+        <!-- Time Column -->
+        <div class="w-20 shrink-0 border-r border-slate-100 bg-slate-50/30 overflow-hidden">
           @for (hour of hours; track hour) {
-            <div class="h-16 flex items-center justify-center text-xs text-gray-500 border-b border-gray-100">
+            <div class="h-20 flex items-start justify-center pt-3 text-[11px] font-bold text-slate-400 uppercase tracking-tighter">
               {{ formatHour(hour) }}
             </div>
           }
         </div>
 
-        <div class="flex-1 overflow-y-auto relative" #timeGrid>
+        <!-- Grid Area -->
+        <div class="flex-1 overflow-y-auto relative bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]" #timeGrid>
           @for (hour of hours; track hour) {
-            <div class="h-16 border-b border-gray-100 relative" [class]="getCurrentHourClass(hour)">
-              <div class="absolute inset-0 border-b border-dashed border-gray-200"></div>
+            <div class="h-20 relative group hover:bg-slate-50/30 transition-colors" [class]="getCurrentHourClass(hour)">
+              <div class="absolute inset-0 pointer-events-none border-b border-slate-100/50"></div>
             </div>
           }
 
           @for (appointment of dayAppointments(); track appointment.id) {
             <div
-              class="absolute left-1 right-1 rounded-lg overflow-hidden cursor-pointer"
+              class="absolute left-2 right-4 rounded-xl overflow-hidden cursor-pointer animate-fade-in"
               [style.top.px]="getAppointmentTop(appointment)"
               [style.height.px]="getAppointmentHeight(appointment)"
             >
@@ -53,7 +56,7 @@ export class DayViewComponent {
   createAtTime = output<Date>();
 
   protected readonly hours = Array.from({ length: 24 }, (_, i) => i);
-  private readonly hourHeight = 64;
+  private readonly hourHeight = 80;
 
   dayAppointments() {
     return this.appointments().sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());

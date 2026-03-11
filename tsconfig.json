@@ -35,10 +35,10 @@
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./apps/admin-portal/tsconfig.app.json"
     },
     {
-      "path": "./tsconfig.spec.json"
+      "path": "./apps/admin-portal/tsconfig.spec.json"
     }
   ]
 }

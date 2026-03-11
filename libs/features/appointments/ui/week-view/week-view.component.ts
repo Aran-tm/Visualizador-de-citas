@@ -16,18 +16,19 @@ interface DayColumn {
   imports: [CommonModule, AppointmentCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="flex flex-col h-full">
-      <div class="flex border-b border-gray-200 bg-gray-50">
-        <div class="w-16 shrink-0 border-r border-gray-200"></div>
+    <div class="flex flex-col h-full bg-white select-none">
+      <!-- Week Header -->
+      <div class="flex border-b border-slate-100 bg-slate-50/50">
+        <div class="w-16 shrink-0 border-r border-slate-100"></div>
         @for (day of weekDays(); track day.date.getTime()) {
           <div
-            class="flex-1 py-3 text-center border-r border-gray-200 last:border-r-0"
-            [class.bg-blue-50]="day.isToday"
+            class="flex-1 py-4 text-center border-r border-slate-100 last:border-r-0 transition-colors"
+            [class.bg-blue-50/30]="day.isToday"
           >
-            <div class="text-sm font-medium text-gray-600 uppercase">{{ day.dayName }}</div>
+            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ day.dayName }}</div>
             <div
-              class="text-xl font-semibold mt-0.5"
-              [class]="day.isToday ? 'text-blue-600' : 'text-gray-800'"
+              class="inline-flex items-center justify-center w-10 h-10 text-lg font-bold rounded-xl transition-all"
+              [class]="day.isToday ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'text-slate-700'"
             >
               {{ day.dayNumber }}
             </div>
@@ -36,26 +37,28 @@ interface DayColumn {
       </div>
 
       <div class="flex flex-1 overflow-hidden">
-        <div class="w-16 shrink-0 border-r border-gray-200 bg-gray-50 overflow-hidden">
+        <!-- Time Column -->
+        <div class="w-16 shrink-0 border-r border-slate-100 bg-slate-50/30 overflow-hidden">
           @for (hour of hours; track hour) {
-            <div class="h-16 flex items-center justify-center text-xs text-gray-500 border-b border-gray-100">
+            <div class="h-20 flex items-start justify-center pt-3 text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
               {{ formatHour(hour) }}
             </div>
           }
         </div>
 
-        <div class="flex-1 overflow-y-auto relative flex">
+        <!-- Weekly Grid -->
+        <div class="flex-1 overflow-y-auto relative flex bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]">
           @for (day of weekDays(); track day.date.getTime()) {
-            <div class="flex-1 border-r border-gray-200 last:border-r-0 relative min-w-30">
+            <div class="flex-1 border-r border-slate-100 last:border-r-0 relative min-w-40 group/col transition-colors hover:bg-slate-50/10">
               @for (hour of hours; track hour) {
-                <div class="h-16 border-b border-gray-100 relative" [class.bg-blue-50]="isCurrentHour(day.date, hour)">
-                  <div class="absolute inset-0 border-b border-dashed border-gray-200"></div>
+                <div class="h-20 relative" [class.bg-blue-50/20]="isCurrentHour(day.date, hour)">
+                  <div class="absolute inset-0 pointer-events-none border-b border-slate-100/50"></div>
                 </div>
               }
 
               @for (appointment of getDayAppointments(day.date); track appointment.id) {
                 <div
-                  class="absolute left-0.5 right-0.5 rounded-lg overflow-hidden cursor-pointer"
+                  class="absolute left-1 right-2 rounded-xl overflow-hidden cursor-pointer animate-fade-in z-10 transition-transform hover:z-20"
                   [style.top.px]="getAppointmentTop(appointment)"
                   [style.height.px]="getAppointmentHeight(appointment)"
                 >
@@ -75,7 +78,7 @@ export class WeekViewComponent {
   selectAppointment = output<Appointment>();
 
   protected readonly hours = Array.from({ length: 24 }, (_, i) => i);
-  private readonly hourHeight = 64;
+  private readonly hourHeight = 80;
 
   weekDays(): DayColumn[] {
     const start = new Date(this.startDate());
