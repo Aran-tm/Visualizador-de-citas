@@ -9,9 +9,9 @@
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "apps/admin-portal/src/**/*.ts"
   ],
   "exclude": [
-    "src/**/*.spec.ts"
+    "apps/admin-portal/src/**/*.spec.ts"
   ]
 }

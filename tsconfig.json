@@ -13,7 +13,18 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@app/domain": ["libs/domain/index.ts"],
+      "@app/domain/*": ["libs/domain/*"],
+      "@app/data-access": ["libs/data-access/index.ts"],
+      "@app/data-access/*": ["libs/data-access/*"],
+      "@app/features": ["libs/features/index.ts"],
+      "@app/features/*": ["libs/features/*"],
+      "@app/core": ["libs/core/index.ts"],
+      "@app/core/*": ["libs/core/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -10,14 +10,14 @@
       "projectType": "application",
       "schematics": {},
       "root": "",
-      "sourceRoot": "src",
+      "sourceRoot": "apps/admin-portal/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
+            "browser": "apps/admin-portal/src/main.ts",
+            "tsConfig": "apps/admin-portal/tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
@@ -25,12 +25,12 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "apps/admin-portal/src/styles.css"
             ],
-            "server": "src/main.server.ts",
+            "server": "apps/admin-portal/src/main.server.ts",
             "outputMode": "server",
             "ssr": {
-              "entry": "src/server.ts"
+              "entry": "apps/admin-portal/src/server.ts"
             }
           },
           "configurations": {

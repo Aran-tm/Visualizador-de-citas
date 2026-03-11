@@ -4,7 +4,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('../../apps/admin-portal/src/app/pages/appointments/calendar-page.component').then(
+      import('./pages/appointments/calendar-page.component').then(
         (m) => m.CalendarPageComponent,
       ),
   },
