@@ -11,17 +11,17 @@ import { AppointmentCardComponent } from '../appointment-card/appointment-card.c
   template: `
     <div class="flex flex-col h-full bg-white select-none">
       <!-- Day View Header -->
-      <div class="flex items-center px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-        <h2 class="text-xl font-bold text-slate-800">
-          {{ date() | date: 'EEEE d' }} <span class="text-slate-400 font-medium">de {{ date() | date: 'MMMM, y' }}</span>
+      <div class="flex items-center px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 bg-slate-50/50">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-800">
+          {{ date() | date: 'EEEE d' }} <span class="text-slate-400 font-medium whitespace-nowrap">de {{ date() | date: 'MMMM, y' }}</span>
         </h2>
       </div>
 
       <div class="flex flex-1 overflow-hidden">
         <!-- Time Column -->
-        <div class="w-20 shrink-0 border-r border-slate-100 bg-slate-50/30 overflow-hidden">
+        <div class="w-14 sm:w-20 shrink-0 border-r border-slate-100 bg-slate-50/30 overflow-hidden">
           @for (hour of hours; track hour) {
-            <div class="h-20 flex items-start justify-center pt-3 text-[11px] font-bold text-slate-400 uppercase tracking-tighter">
+            <div class="h-20 flex items-start justify-center pt-3 text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-tighter">
               {{ formatHour(hour) }}
             </div>
           }
@@ -37,7 +37,7 @@ import { AppointmentCardComponent } from '../appointment-card/appointment-card.c
 
           @for (appointment of dayAppointments(); track appointment.id) {
             <div
-              class="absolute left-2 right-4 rounded-xl overflow-hidden cursor-pointer animate-fade-in"
+              class="absolute left-3 right-3 rounded-2xl overflow-hidden cursor-pointer animate-fade-in z-10 transition-all hover:z-20"
               [style.top.px]="getAppointmentTop(appointment)"
               [style.height.px]="getAppointmentHeight(appointment)"
             >

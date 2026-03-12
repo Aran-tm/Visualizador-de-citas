@@ -47,18 +47,17 @@ interface DayColumn {
         </div>
 
         <!-- Weekly Grid -->
-        <div class="flex-1 overflow-y-auto relative flex bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]">
+        <div class="flex-1 overflow-y-auto overflow-x-auto relative flex bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]">
           @for (day of weekDays(); track day.date.getTime()) {
-            <div class="flex-1 border-r border-slate-100 last:border-r-0 relative min-w-40 group/col transition-colors hover:bg-slate-50/10">
+            <div class="flex-1 border-r border-slate-100 last:border-r-0 relative min-w-[140px] sm:min-w-0 group/col transition-colors hover:bg-slate-50/10">
               @for (hour of hours; track hour) {
                 <div class="h-20 relative" [class.bg-blue-50/20]="isCurrentHour(day.date, hour)">
                   <div class="absolute inset-0 pointer-events-none border-b border-slate-100/50"></div>
                 </div>
               }
-
               @for (appointment of getDayAppointments(day.date); track appointment.id) {
                 <div
-                  class="absolute left-1 right-2 rounded-xl overflow-hidden cursor-pointer animate-fade-in z-10 transition-transform hover:z-20"
+                  class="absolute left-1 right-1 rounded-2xl overflow-hidden cursor-pointer animate-fade-in z-10 transition-all hover:z-20"
                   [style.top.px]="getAppointmentTop(appointment)"
                   [style.height.px]="getAppointmentHeight(appointment)"
                 >
