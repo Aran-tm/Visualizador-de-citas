@@ -35,10 +35,10 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/admin-portal/tsconfig.app.json"
+      "path": "./apps/visualizador_citas/tsconfig.app.json"
     },
     {
-      "path": "./apps/admin-portal/tsconfig.spec.json"
+      "path": "./apps/visualizador_citas/tsconfig.spec.json"
     }
   ]
 }

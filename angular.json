@@ -10,14 +10,14 @@
       "projectType": "application",
       "schematics": {},
       "root": "",
-      "sourceRoot": "apps/admin-portal/src",
+      "sourceRoot": "apps/visualizador_citas/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "apps/admin-portal/src/main.ts",
-            "tsConfig": "apps/admin-portal/tsconfig.app.json",
+            "browser": "apps/visualizador_citas/src/main.ts",
+            "tsConfig": "apps/visualizador_citas/tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
@@ -25,12 +25,12 @@
               }
             ],
             "styles": [
-              "apps/admin-portal/src/styles.css"
+              "apps/visualizador_citas/src/styles.css"
             ],
-            "server": "apps/admin-portal/src/main.server.ts",
+            "server": "apps/visualizador_citas/src/main.server.ts",
             "outputMode": "server",
             "ssr": {
-              "entry": "apps/admin-portal/src/server.ts"
+              "entry": "apps/visualizador_citas/src/server.ts"
             }
           },
           "configurations": {
