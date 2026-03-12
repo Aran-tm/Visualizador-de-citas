@@ -49,7 +49,7 @@ interface DayColumn {
         <!-- Weekly Grid -->
         <div class="flex-1 overflow-y-auto overflow-x-auto relative flex bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]">
           @for (day of weekDays(); track day.date.getTime()) {
-            <div class="flex-1 border-r border-slate-100 last:border-r-0 relative min-w-[140px] sm:min-w-0 group/col transition-colors hover:bg-slate-50/10">
+            <div class="flex-1 border-r border-slate-100 last:border-r-0 relative min-w-[120px] sm:min-w-0 group/col transition-colors hover:bg-slate-50/10">
               @for (hour of hours; track hour) {
                 <div class="h-20 relative" [class.bg-blue-50/20]="isCurrentHour(day.date, hour)">
                   <div class="absolute inset-0 pointer-events-none border-b border-slate-100/50"></div>
@@ -57,9 +57,8 @@ interface DayColumn {
               }
               @for (appointment of getDayAppointments(day.date); track appointment.id) {
                 <div
-                  class="absolute left-1 right-1 rounded-2xl overflow-hidden cursor-pointer animate-fade-in z-10 transition-all hover:z-20"
-                  [style.top.px]="getAppointmentTop(appointment)"
-                  [style.height.px]="getAppointmentHeight(appointment)"
+                  class="absolute rounded-xl overflow-hidden cursor-pointer animate-fade-in z-10 hover:z-20 transition-all duration-300"
+                  [ngStyle]="getAppointmentStyle(appointment)"
                 >
                   <app-appointment-card [appointment]="appointment" (clickAppointment)="onAppointmentClick($event)" />
                 </div>
@@ -78,6 +77,10 @@ export class WeekViewComponent {
 
   protected readonly hours = Array.from({ length: 24 }, (_, i) => i);
   private readonly hourHeight = 80;
+
+  // Lógica de colisión por día
+  private collisionGroups = new Map<string, { groupIndex: number; totalColumns: number }>();
+  private calculatedAppointments = new Map<string, Appointment[]>();
 
   weekDays(): DayColumn[] {
     const start = new Date(this.startDate());
@@ -99,6 +102,14 @@ export class WeekViewComponent {
       });
     }
 
+    // Precalcular las citas y colisiones por día
+    this.calculatedAppointments.clear();
+    days.forEach(day => {
+        const dpApts = this.computeDayAppointments(day.date);
+        this.calculateCollisions(dpApts);
+        this.calculatedAppointments.set(day.date.toISOString().split('T')[0], dpApts);
+    });
+
     return days;
   }
 
@@ -116,14 +127,13 @@ export class WeekViewComponent {
     );
   }
 
-  getDayAppointments(date: Date): Appointment[] {
+  private computeDayAppointments(date: Date): Appointment[] {
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date(startOfDay);
     endOfDay.setDate(startOfDay.getDate() + 1);
 
-    return this
-      .appointments()
+    return this.appointments()
       .filter((apt) => {
         const aptDate = new Date(apt.startTime);
         return aptDate >= startOfDay && aptDate < endOfDay;
@@ -131,18 +141,83 @@ export class WeekViewComponent {
       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
   }
 
-  getAppointmentTop(appointment: Appointment): number {
-    const start = new Date(appointment.startTime);
-    const hour = start.getHours();
-    const minute = start.getMinutes();
-    return hour * this.hourHeight + (minute / 60) * this.hourHeight;
+  getDayAppointments(date: Date): Appointment[] {
+    const key = date.toISOString().split('T')[0];
+    return this.calculatedAppointments.get(key) || [];
   }
 
-  getAppointmentHeight(appointment: Appointment): number {
+  // --- Lógica de posicionamiento y colisiones ---
+
+  private calculateCollisions(appointments: Appointment[]): void {
+    // Lista de columnas activas en el barrido actual
+    const columns: Appointment[][] = [];
+
+    for (const apt of appointments) {
+      const aptStart = new Date(apt.startTime).getTime();
+      
+      let placed = false;
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+        const lastAptInColumn = column[column.length - 1];
+        if (new Date(lastAptInColumn.endTime).getTime() <= aptStart) {
+          column.push(apt);
+          placed = true;
+          break;
+        }
+      }
+
+      if (!placed) {
+        columns.push([apt]);
+      }
+    }
+
+    for (let i = 0; i < columns.length; i++) {
+        for (const apt of columns[i]) {
+            const aptStart = new Date(apt.startTime).getTime();
+            const aptEnd = new Date(apt.endTime).getTime();
+            
+            let maxConcurrentColumns = 1;
+            for (const otherColumn of columns) {
+                if (otherColumn === columns[i]) continue;
+                const collides = otherColumn.some(otherApt => {
+                    const oStart = new Date(otherApt.startTime).getTime();
+                    const oEnd = new Date(otherApt.endTime).getTime();
+                    return Math.max(aptStart, oStart) < Math.min(aptEnd, oEnd);
+                });
+                if (collides) maxConcurrentColumns++;
+            }
+
+            this.collisionGroups.set(apt.id, {
+                groupIndex: i,
+                totalColumns: maxConcurrentColumns
+            });
+        }
+    }
+  }
+
+  getAppointmentStyle(appointment: Appointment): Record<string, string> {
     const start = new Date(appointment.startTime);
     const end = new Date(appointment.endTime);
-    const durationMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
-    return (durationMinutes / 60) * this.hourHeight;
+    
+    const hour = start.getHours();
+    const minute = start.getMinutes();
+    
+    const durationMinutes = (end.getTime() - start.getTime()) / 60000;
+    
+    const top = hour * this.hourHeight + (minute / 60) * this.hourHeight;
+    const height = (durationMinutes / 60) * this.hourHeight;
+
+    const collisionInfo = this.collisionGroups.get(appointment.id) || { groupIndex: 0, totalColumns: 1 };
+    
+    const widthPercentage = 100 / collisionInfo.totalColumns;
+    const leftPercentage = collisionInfo.groupIndex * widthPercentage;
+
+    return {
+      'top': `${top}px`,
+      'height': `${height}px`,
+      'left': `calc(${leftPercentage}% + 4px)`, // 4px margin left
+      'width': `calc(${widthPercentage}% - 8px)` // 8px total margin (left+right)
+    };
   }
 
   onAppointmentClick(appointment: Appointment): void {
