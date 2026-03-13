@@ -7,7 +7,7 @@
 
 ## Índice
 
-1. [Arquitectura por Capas (DDD)](#1-arquitectura-por-capas)
+1. [Arquitectura basada en Dominios (DDD)](#1-arquitectura-por-capas)
 2. [Angular Signals como Sistema de Estado](#2-angular-signals)
 3. [Patrón Repositorio + Tokens de Inyección](#3-patrón-repositorio)
 4. [Persistencia con LocalStorage](#4-persistencia-con-localstorage)
