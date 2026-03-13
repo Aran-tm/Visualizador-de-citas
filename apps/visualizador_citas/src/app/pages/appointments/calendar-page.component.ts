@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { DayViewComponent } from '@app/features/appointments/ui/day-view/day-view.component';
 import { WeekViewComponent } from '@app/features/appointments/ui/week-view/week-view.component';
 import { AppointmentModalComponent } from '@app/features/appointments/ui/appointment-modal/appointment-modal.component';
@@ -8,7 +8,7 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
 
 @Component({
   selector: 'app-calendar-page',
-  imports: [CommonModule, DayViewComponent, WeekViewComponent, AppointmentModalComponent],
+  imports: [CommonModule, NgOptimizedImage, DayViewComponent, WeekViewComponent, AppointmentModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="h-[100dvh] flex flex-col bg-slate-50 font-sans overflow-hidden">
@@ -19,10 +19,8 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
           <!-- Top row on mobile: Title + View Toggler + Add Button -->
           <div class="flex items-center justify-between w-full sm:w-auto gap-2 sm:gap-8">
             <div class="flex items-center gap-2">
-              <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 shrink-0">
-                <svg class="w-4 h-4 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+              <div class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center overflow-hidden shadow-lg shadow-blue-200 shrink-0">
+                <img ngSrc="logo.png" alt="Appointment Viewer Logo" fill [priority]="true" class="object-cover" />
               </div>
               <h1 class="text-sm sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight whitespace-nowrap">
                 Appointment Viewer
