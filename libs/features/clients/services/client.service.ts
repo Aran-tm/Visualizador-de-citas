@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Client } from '@app/domain/clients/models/client.model';
-import { IClientRepository } from '@app/domain/clients/repositories/client.repository.interface';
 import { CLIENT_REPOSITORY } from '@app/domain/clients/tokens/client-repository.token';
 
 
