@@ -8,20 +8,22 @@ import { AppointmentStatus } from '@app/domain/appointments/enums/appointment-st
   imports: [CommonModule],
   template: `
     <div
-      class="p-3 rounded-lg border-l-4 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02]"
+      class="p-2 sm:p-3 rounded-lg border-l-4 cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] min-h-[48px] h-full flex flex-col overflow-hidden"
       [class]="statusClasses()"
       (click)="onClick()"
     >
-      <div class="font-semibold text-sm truncate">{{ appointment().clientName }}</div>
-      <div class="text-xs opacity-90 truncate">{{ appointment().serviceName }}</div>
-      <div class="flex items-center gap-1 mt-1 text-xs opacity-75">
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="font-semibold text-xs sm:text-sm truncate leading-tight">{{ appointment().clientName }}</div>
+      <div class="text-[10px] sm:text-xs opacity-90 truncate leading-tight">{{ appointment().serviceName }}</div>
+      <div class="flex-1"></div>
+      
+      <div class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs opacity-75 shrink-0 hidden sm:flex">
+        <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span>{{ formatTime(appointment().startTime) }} - {{ formatTime(appointment().endTime) }}</span>
+        <span class="truncate">{{ formatTime(appointment().startTime) }} - {{ formatTime(appointment().endTime) }}</span>
       </div>
-      <div class="flex items-center gap-1 mt-0.5 text-xs opacity-75">
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex items-center gap-1 mt-0.5 text-[10px] sm:text-xs opacity-75 shrink-0 hidden sm:flex">
+        <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
         <span class="truncate">{{ appointment().teamMember }}</span>

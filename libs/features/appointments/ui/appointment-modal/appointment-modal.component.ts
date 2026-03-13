@@ -10,8 +10,8 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
   imports: [CommonModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col border border-slate-200/60">
+    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in" (click)="onClose()">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col border border-slate-200/60" (click)="$event.stopPropagation()">
         <!-- Modal Header -->
         <div class="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50/50">
           <div class="flex items-center gap-3">
@@ -182,8 +182,8 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
       
       <!-- Delete Confirmation Modal -->
       @if (showDeleteConfirm()) {
-        <div class="absolute inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in rounded-3xl">
-          <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center animate-scale-in">
+        <div class="absolute inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in rounded-3xl" (click)="showDeleteConfirm.set(false)">
+          <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center animate-scale-in" (click)="$event.stopPropagation()">
             <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />

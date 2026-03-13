@@ -153,9 +153,9 @@ export class DayViewComponent {
     const minute = start.getMinutes();
     
     const durationMinutes = (end.getTime() - start.getTime()) / 60000;
-    
     const top = hour * this.hourHeight + (minute / 60) * this.hourHeight;
-    const height = (durationMinutes / 60) * this.hourHeight;
+    const baseHeight = (durationMinutes / 60) * this.hourHeight;
+    const height = Math.max(48, baseHeight); // Min height of 48px so it's readable
 
     const collisionInfo = this.collisionGroups.get(appointment.id) || { groupIndex: 0, totalColumns: 1 };
     
