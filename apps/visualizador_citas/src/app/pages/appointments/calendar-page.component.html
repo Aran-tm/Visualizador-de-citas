@@ -16,9 +16,10 @@
 
             <div class="flex items-center gap-2">
               <!-- View Toggler -->
-              <div class="flex items-center bg-slate-100/80 p-0.5 sm:p-1 rounded-xl border border-slate-200/50">
+              <div class="flex items-center bg-slate-100/80 p-0.5 sm:p-1 rounded-xl border border-slate-200/50" role="group" aria-label="Cambiar vista">
                 <button
                   (click)="setViewMode('day')"
+                  [attr.aria-pressed]="viewMode() === 'day'"
                   [class]="viewMode() === 'day' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'"
                   class="px-2.5 sm:px-5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all duration-200 cursor-pointer"
                 >
@@ -26,6 +27,7 @@
                 </button>
                 <button
                   (click)="setViewMode('week')"
+                  [attr.aria-pressed]="viewMode() === 'week'"
                   [class]="viewMode() === 'week' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'"
                   class="px-2.5 sm:px-5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all duration-200 cursor-pointer"
                 >
@@ -36,9 +38,10 @@
               <!-- Mobile Add Button (Icon only) -->
               <button
                 (click)="openCreateModal()"
+                aria-label="Nueva cita"
                 class="sm:hidden flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-xl shadow-md shadow-blue-200 transition-all active:scale-95 shrink-0 cursor-pointer"
               >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                 </svg>
               </button>
@@ -59,9 +62,10 @@
             <div class="flex items-center bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0">
               <button
                 (click)="navigatePrevious()"
+                [attr.aria-label]="viewMode() === 'day' ? 'Día anterior' : 'Semana anterior'"
                 class="p-1.5 sm:p-2.5 hover:bg-slate-50 transition-colors text-slate-600 border-r border-slate-100 cursor-pointer"
               >
-                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
@@ -75,9 +79,10 @@
 
               <button
                 (click)="navigateNext()"
+                [attr.aria-label]="viewMode() === 'day' ? 'Día siguiente' : 'Semana siguiente'"
                 class="p-1.5 sm:p-2.5 hover:bg-slate-50 transition-colors text-slate-600 border-l border-slate-100 cursor-pointer"
               >
-                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
@@ -99,7 +104,12 @@
 
       <!-- Main Content Area -->
       <main class="flex-1 min-h-0 p-2 sm:p-6 lg:p-8 flex flex-col">
-        <div class="flex-1 bg-white sm:rounded-2xl sm:shadow-xl sm:shadow-slate-200/50 sm:border border-slate-200/60 overflow-hidden animate-fade-in relative flex flex-col w-full rounded-xl shadow-md border" style="container-type: inline-size;">
+        <div
+          role="region"
+          aria-label="Calendario de citas"
+          class="flex-1 bg-white sm:rounded-2xl sm:shadow-xl sm:shadow-slate-200/50 sm:border border-slate-200/60 overflow-hidden animate-fade-in relative flex flex-col w-full rounded-xl shadow-md border"
+          style="container-type: inline-size;"
+        >
           @if (viewMode() === 'day') {
             <app-day-view
               class="flex-1 min-h-0"

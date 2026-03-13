@@ -27,9 +27,10 @@
       </div>
       <button
         (click)="onClose()"
+        aria-label="Cerrar modal"
         class="text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-xl cursor-pointer"
       >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -65,7 +66,7 @@
       <div class="space-y-4">
         <div>
           <label
-            class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
+            class="block text-[11px] font-black uppercase tracking-widest text-slate-600 mb-1.5 ml-1"
             >Cliente</label
           >
           <input
@@ -79,7 +80,7 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label
-              class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
+              class="block text-[11px] font-black uppercase tracking-widest text-slate-600 mb-1.5 ml-1"
               >Servicio</label
             >
             <select
@@ -95,7 +96,7 @@
 
           <div>
             <label
-              class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
+              class="block text-[11px] font-black uppercase tracking-widest text-slate-600 mb-1.5 ml-1"
               >Personal</label
             >
             <select
@@ -113,7 +114,7 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label
-              class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
+              class="block text-[11px] font-black uppercase tracking-widest text-slate-600 mb-1.5 ml-1"
               >Fecha</label
             >
             <input
@@ -125,7 +126,7 @@
 
           <div>
             <label
-              class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
+              class="block text-[11px] font-black uppercase tracking-widest text-slate-600 mb-1.5 ml-1"
               >Estado</label
             >
             <select
@@ -150,7 +151,7 @@
 
         <div>
           <label
-            class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
+            class="block text-[11px] font-black uppercase tracking-widest text-slate-600 mb-1.5 ml-1"
             >Notas Adicionales</label
           >
           <textarea
