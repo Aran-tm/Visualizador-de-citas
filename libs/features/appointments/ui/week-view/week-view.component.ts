@@ -16,8 +16,8 @@ interface DayColumn {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="flex flex-col h-full bg-white select-none">
-      <!-- Week Header -->
-      <div class="flex border-b border-slate-100 bg-slate-50/50">
+      <!-- Week Header (sticky so it stays visible when scrolling) -->
+      <div class="flex border-b border-slate-100 bg-slate-50/50 shrink-0">
         <div class="w-16 shrink-0 border-r border-slate-100"></div>
         @for (day of weekDays(); track day.date.getTime()) {
           <div
@@ -35,9 +35,10 @@ interface DayColumn {
         }
       </div>
 
-      <div class="flex flex-1 overflow-hidden">
+      <!-- Scrollable area: time column + grid scroll together -->
+      <div class="flex flex-1 overflow-y-auto overflow-x-auto">
         <!-- Time Column -->
-        <div class="w-16 shrink-0 border-r border-slate-100 bg-slate-50/30 overflow-hidden">
+        <div class="w-16 shrink-0 border-r border-slate-100 bg-slate-50/30">
           @for (hour of hours; track hour) {
             <div class="h-20 flex items-start justify-center pt-3 text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
               {{ formatHour(hour) }}
@@ -46,7 +47,7 @@ interface DayColumn {
         </div>
 
         <!-- Weekly Grid -->
-        <div class="flex-1 overflow-y-auto overflow-x-auto relative flex bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]">
+        <div class="flex-1 relative flex bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]">
           @for (day of weekDays(); track day.date.getTime()) {
             <div class="flex-1 border-r border-slate-100 last:border-r-0 relative min-w-[120px] sm:min-w-0 group/col transition-colors hover:bg-slate-50/10">
               @for (hour of hours; track hour) {

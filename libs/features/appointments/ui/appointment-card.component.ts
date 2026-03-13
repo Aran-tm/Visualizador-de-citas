@@ -1,7 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Appointment } from '../../../domain/models/appointment.model';
-import { AppointmentStatus } from '../../../domain/enums/appointment-status.enum';
+import { Appointment } from '@app/domain/appointments/models/appointment.model';
+import { AppointmentStatus } from '@app/domain/appointments/enums/appointment-status.enum';
 
 @Component({
   selector: 'app-appointment-card',

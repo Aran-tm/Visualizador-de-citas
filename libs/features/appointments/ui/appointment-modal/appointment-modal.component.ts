@@ -147,7 +147,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
           @if (isEditing()) {
             <button
               type="button"
-              (click)="onDelete()"
+              (click)="showDeleteConfirm.set(true)"
               class="px-6 py-3 bg-rose-50 text-rose-600 rounded-2xl hover:bg-rose-100 transition-all font-bold text-sm active:scale-95 cursor-pointer"
             >
               Eliminar Cita
@@ -171,6 +171,39 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
           </button>
         </div>
       </div>
+      
+      <!-- Delete Confirmation Modal -->
+      @if (showDeleteConfirm()) {
+        <div class="absolute inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in rounded-3xl">
+          <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center animate-scale-in">
+            <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2">¿Eliminar cita?</h3>
+            <p class="text-slate-500 mb-6 text-sm">Esta acción no se puede deshacer. La cita será eliminada permanentemente del sistema.</p>
+            
+            <div class="flex gap-3 justify-center">
+              <button 
+                type="button" 
+                (click)="showDeleteConfirm.set(false)" 
+                class="px-5 py-2.5 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition-colors active:scale-95 cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button 
+                type="button" 
+                (click)="onConfirmDelete()" 
+                class="px-5 py-2.5 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 hover:shadow-lg hover:shadow-rose-200 transition-all active:scale-95 cursor-pointer"
+              >
+                Sí, eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
     </div>
   `,
 })
@@ -194,6 +227,7 @@ export class AppointmentModalComponent {
 
   isEditing = signal(false);
   isSubmitting = signal(false);
+  showDeleteConfirm = signal(false);
   errors = signal<ValidationError[]>([]);
   teamMembers = this.appointmentService.teamMembers;
   services = this.appointmentService.services;
@@ -307,12 +341,10 @@ export class AppointmentModalComponent {
     }
   }
 
-  onDelete(): void {
+  onConfirmDelete(): void {
     if (!this.isEditing()) return;
-    if (!isPlatformBrowser(this.platformId)) return;
-    if (confirm('¿Está seguro de que desea eliminar esta cita?')) {
-      this.deleted.emit(this.appointment()!.id);
-    }
+    this.deleted.emit(this.appointment()!.id);
+    this.showDeleteConfirm.set(false);
   }
 
   onClose(): void {
