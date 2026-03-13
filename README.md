@@ -1,6 +1,6 @@
 # 📅 Visualizador de Citas
 
-Una aplicación de gestión de citas estética/profesional construida con **Angular 19** usando los últimos patrones modernos: Signals, componentes standalone, arquitectura por capas y persistencia local.
+Una aplicación de gestión de citas estética/profesional construida con **Angular 21** usando los últimos patrones modernos: Signals, componentes standalone, arquitectura por capas y persistencia local.
 
 ---
 
@@ -247,7 +247,7 @@ Angular re-renderiza los componentes afectados (OnPush + Signals)
 
 | Tecnología | Uso |
 |-----------|-----|
-| Angular 19 | Framework principal |
+| Angular 21 | Framework principal |
 | Angular Signals | Gestión de estado reactivo |
 | Reactive Forms | Formulario del modal |
 | TailwindCSS | Estilos y diseño |
