@@ -1,0 +1,33 @@
+<div class="grid grid-cols-2 gap-4">
+  <!-- Hora Inicio -->
+  <div>
+    <label
+      class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
+      >Hora Inicio</label
+    >
+    <input
+      type="time"
+      [ngModel]="startTime()"
+      (ngModelChange)="onStartChange($event)"
+      (blur)="onBlur()"
+      [disabled]="isDisabled()"
+      class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+    />
+  </div>
+
+  <!-- Hora Fin -->
+  <div>
+    <label
+      class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
+      >Hora Fin</label
+    >
+    <input
+      type="time"
+      [ngModel]="endTime()"
+      (ngModelChange)="onEndChange($event)"
+      (blur)="onBlur()"
+      [disabled]="isDisabled()"
+      class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+    />
+  </div>
+</div>

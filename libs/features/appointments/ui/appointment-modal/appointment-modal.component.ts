@@ -1,9 +1,31 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, output, PLATFORM_ID, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Appointment } from '@app/domain/appointments/models/appointment.model';
 import { AppointmentStatus } from '@app/domain/appointments/enums/appointment-status.enum';
 import { AppointmentService, CreateAppointmentDto, ValidationError } from '../../services/appointment.service';
+import { TimeRange } from '../time-range-selector/time-range-selector.component';
+
+/** Validador personalizado: la hora de fin debe ser posterior a la de inicio */
+const timeRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value as TimeRange | null;
+  if (!value?.start || !value?.end) return null;
+  return value.start >= value.end ? { timeRangeInvalid: true } : null;
+};
+
+/** Validador: el objeto TimeRange debe tener start Y end para ser válido */
+const timeRangeRequired: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value as TimeRange | null;
+  return value?.start && value?.end ? null : { required: true };
+};
 
 @Component({
   selector: 'app-appointment-modal',
@@ -20,7 +42,6 @@ export class AppointmentModalComponent {
 
   private fb = inject(FormBuilder);
   private appointmentService = inject(AppointmentService);
-  private platformId = inject(PLATFORM_ID);
 
   protected readonly AppointmentStatus = AppointmentStatus;
   protected readonly statusOptions = [
@@ -37,13 +58,19 @@ export class AppointmentModalComponent {
   teamMembers = this.appointmentService.teamMembers;
   services = this.appointmentService.services;
 
+  /**
+   * El formulario ahora tiene un único control `timeRange` en lugar de
+   * dos controles separados (startTime / endTime).
+   *
+   * `timeRange` acepta un objeto `{ start: string, end: string }` y Angular
+   * lo conecta directamente con el <app-time-range-selector> gracias al CVA.
+   */
   form = this.fb.group({
     clientName: ['', Validators.required],
     serviceName: ['', Validators.required],
     teamMember: ['', Validators.required],
     date: ['', Validators.required],
-    startTime: ['', Validators.required],
-    endTime: ['', Validators.required],
+    timeRange: [null as TimeRange | null, [timeRangeRequired, timeRangeValidator]],
     status: [AppointmentStatus.Pending, Validators.required],
     notes: [''],
   });
@@ -52,43 +79,45 @@ export class AppointmentModalComponent {
     effect(() => {
       const appointment = this.appointment();
       const initialDate = this.initialDate();
-      
+
       if (appointment) {
         this.isEditing.set(true);
         const startDate = new Date(appointment.startTime);
         const endDate = new Date(appointment.endTime);
 
+        // writeValue se activa internamente al llamar patchValue
         this.form.patchValue({
           clientName: appointment.clientName,
           serviceName: appointment.serviceName,
           teamMember: appointment.teamMember,
           date: this.formatDateForInput(startDate),
-          startTime: this.formatTimeForInput(startDate),
-          endTime: this.formatTimeForInput(endDate),
+          timeRange: {
+            start: this.formatTimeForInput(startDate),
+            end: this.formatTimeForInput(endDate),
+          },
           status: appointment.status,
           notes: appointment.notes || '',
         });
       } else {
         this.isEditing.set(false);
-        
+
         let dateToUse = new Date();
-        let startTimeToUse = '';
-        let endTimeToUse = '';
+        let timeRange: TimeRange | null = null;
 
         if (initialDate) {
           dateToUse = new Date(initialDate);
-          startTimeToUse = this.formatTimeForInput(initialDate);
-          
           const end = new Date(initialDate);
           end.setHours(end.getHours() + 1);
-          endTimeToUse = this.formatTimeForInput(end);
+          timeRange = {
+            start: this.formatTimeForInput(initialDate),
+            end: this.formatTimeForInput(end),
+          };
         }
 
         this.form.reset({
           status: AppointmentStatus.Pending,
           date: initialDate ? this.formatDateForInput(dateToUse) : '',
-          startTime: startTimeToUse,
-          endTime: endTimeToUse,
+          timeRange,
         });
       }
     }, { allowSignalWrites: true });
@@ -113,10 +142,10 @@ export class AppointmentModalComponent {
 
     const formValue = this.form.value;
     const date = formValue.date!;
-    const [startHour, startMinute] = formValue.startTime!.split(':').map(Number);
-    const [endHour, endMinute] = formValue.endTime!.split(':').map(Number);
-    
-    // Use local timezone explicitly
+    const timeRange = formValue.timeRange!;
+
+    const [startHour, startMinute] = timeRange.start.split(':').map(Number);
+    const [endHour, endMinute] = timeRange.end.split(':').map(Number);
     const [year, month, day] = date.split('-').map(Number);
 
     const startTime = new Date(year, month - 1, day, startHour, startMinute, 0, 0);
@@ -144,7 +173,6 @@ export class AppointmentModalComponent {
       this.errors.set(result);
       this.isSubmitting.set(false);
     } else if (result) {
-      // Agregar un pequeño retraso artificial (800ms) para simular la carga y mostrar el spinner
       setTimeout(() => {
         this.saved.emit(result as Appointment);
         this.isSubmitting.set(false);
@@ -155,8 +183,7 @@ export class AppointmentModalComponent {
   onConfirmDelete(): void {
     if (!this.isEditing() || this.isDeleting()) return;
     this.isDeleting.set(true);
-    
-    // Simular carga al eliminar
+
     setTimeout(() => {
       this.deleted.emit(this.appointment()!.id);
       this.isDeleting.set(false);

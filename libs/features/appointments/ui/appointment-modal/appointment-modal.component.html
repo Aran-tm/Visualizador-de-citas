@@ -139,31 +139,14 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label
-              class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
-              >Hora Inicio</label
-            >
-            <input
-              type="time"
-              formControlName="startTime"
-              class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
-            />
-          </div>
+        <!-- Control de Hora — implementado con ControlValueAccessor -->
+        <app-time-range-selector formControlName="timeRange" />
 
-          <div>
-            <label
-              class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1"
-              >Hora Fin</label
-            >
-            <input
-              type="time"
-              formControlName="endTime"
-              class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
-            />
-          </div>
-        </div>
+        <!-- Validación de rango de horas -->
+        @if (form.controls['timeRange'].errors?.['timeRangeInvalid'] && form.controls['timeRange'].touched) {
+          <p class="text-xs text-rose-500 font-semibold -mt-2 ml-1">⚠ La hora de fin debe ser posterior a la hora de inicio.</p>
+        }
+
 
         <div>
           <label
