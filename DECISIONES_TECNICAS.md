@@ -1,5 +1,5 @@
 # 📋 Documento de Decisiones Técnicas
-### Visualizador de Citas — Angular 19
+### Visualizador de Citas — Angular 21
 
 > Este documento explica de forma exhaustiva y profesional cada decisión técnica tomada durante el desarrollo de la aplicación, incluyendo el razonamiento detrás de cada patrón arquitectónico, tecnología elegida y solución aplicada.
 
