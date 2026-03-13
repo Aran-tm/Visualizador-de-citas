@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Appointment } from '@app/domain/appointments/models/appointment.model';
 import { IAppointmentRepository } from '@app/domain/appointments/repositories/appointment.repository.interface';
+
+const STORAGE_KEY = 'visualizador_citas_data';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +11,47 @@ import { IAppointmentRepository } from '@app/domain/appointments/repositories/ap
 export class MockAppointmentRepository implements IAppointmentRepository {
   private appointments: Appointment[] = [];
   private idCounter = 1;
+  private platformId = inject(PLATFORM_ID);
+
+  constructor() {
+    this.loadFromStorage();
+  }
+
+  private loadFromStorage(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        const parsed: any[] = JSON.parse(stored);
+        this.appointments = parsed.map(apt => ({
+          ...apt,
+          startTime: new Date(apt.startTime),
+          endTime: new Date(apt.endTime)
+        }));
+        
+        // Find the highest ID to set the counter
+        let maxId = 0;
+        for (const apt of this.appointments) {
+          if (apt.id.startsWith('apt-')) {
+            const num = parseInt(apt.id.replace('apt-', ''), 10);
+            if (!isNaN(num) && num > maxId) {
+              maxId = num;
+            }
+          }
+        }
+        this.idCounter = maxId + 1;
+      } catch (e) {
+        console.error('Failed to parse appointments from localStorage', e);
+        this.appointments = [];
+      }
+    }
+  }
+
+  private saveToStorage(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.appointments));
+  }
 
   getAll(): Appointment[] {
     return [...this.appointments];
@@ -42,6 +86,7 @@ export class MockAppointmentRepository implements IAppointmentRepository {
     };
     this.appointments.push(newAppointment);
     this.appointments.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+    this.saveToStorage();
     return newAppointment;
   }
 
@@ -50,6 +95,8 @@ export class MockAppointmentRepository implements IAppointmentRepository {
     if (index === -1) return undefined;
 
     this.appointments[index] = { ...this.appointments[index], ...appointment };
+    this.appointments.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+    this.saveToStorage();
     return this.appointments[index];
   }
 
@@ -57,6 +104,7 @@ export class MockAppointmentRepository implements IAppointmentRepository {
     const index = this.appointments.findIndex((apt) => apt.id === id);
     if (index === -1) return false;
     this.appointments.splice(index, 1);
+    this.saveToStorage();
     return true;
   }
 
