@@ -12,7 +12,7 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 import { Appointment } from '@app/domain/appointments/models/appointment.model';
 import { AppointmentStatus } from '@app/domain/appointments/enums/appointment-status.enum';
 import { AppointmentService, CreateAppointmentDto, ValidationError } from '../../services/appointment.service';
-import { TimeRange } from '../time-range-selector/time-range-selector.component';
+import { TimeRangeSelectorComponent, TimeRange } from '../time-range-selector/time-range-selector.component';
 
 /** Validador personalizado: la hora de fin debe ser posterior a la de inicio */
 const timeRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -29,7 +29,7 @@ const timeRangeRequired: ValidatorFn = (control: AbstractControl): ValidationErr
 
 @Component({
   selector: 'app-appointment-modal',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TimeRangeSelectorComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './appointment-modal.component.html',
 })
