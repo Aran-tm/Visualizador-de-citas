@@ -12,7 +12,6 @@ interface DayColumn {
 
 @Component({
   selector: 'app-week-view',
-  standalone: true,
   imports: [CommonModule, AppointmentCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -51,7 +50,7 @@ interface DayColumn {
           @for (day of weekDays(); track day.date.getTime()) {
             <div class="flex-1 border-r border-slate-100 last:border-r-0 relative min-w-[120px] sm:min-w-0 group/col transition-colors hover:bg-slate-50/10">
               @for (hour of hours; track hour) {
-                <div class="h-20 relative" [class.bg-blue-50/20]="isCurrentHour(day.date, hour)">
+                <div class="h-20 relative cursor-pointer hover:bg-slate-50/30 transition-colors" [class.bg-blue-50/20]="isCurrentHour(day.date, hour)" (click)="onTimeSlotClick(day.date, hour)">
                   <div class="absolute inset-0 pointer-events-none border-b border-slate-100/50"></div>
                 </div>
               }
@@ -74,6 +73,7 @@ export class WeekViewComponent {
   startDate = input.required<Date>();
   appointments = input.required<Appointment[]>();
   selectAppointment = output<Appointment>();
+  createAtTime = output<Date>();
 
   protected readonly hours = Array.from({ length: 24 }, (_, i) => i);
   private readonly hourHeight = 80;
@@ -222,5 +222,11 @@ export class WeekViewComponent {
 
   onAppointmentClick(appointment: Appointment): void {
     this.selectAppointment.emit(appointment);
+  }
+
+  onTimeSlotClick(date: Date, hour: number): void {
+    const clickedDate = new Date(date);
+    clickedDate.setHours(hour, 0, 0, 0);
+    this.createAtTime.emit(clickedDate);
   }
 }

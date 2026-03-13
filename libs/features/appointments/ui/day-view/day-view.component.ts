@@ -5,7 +5,6 @@ import { AppointmentCardComponent } from '../appointment-card/appointment-card.c
 
 @Component({
   selector: 'app-day-view',
-  standalone: true,
   imports: [CommonModule, AppointmentCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -30,7 +29,7 @@ import { AppointmentCardComponent } from '../appointment-card/appointment-card.c
         <!-- Grid Area -->
         <div class="flex-1 overflow-y-auto relative bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]" #timeGrid>
           @for (hour of hours; track hour) {
-            <div class="h-20 relative group hover:bg-slate-50/30 transition-colors" [class]="getCurrentHourClass(hour)">
+            <div class="h-20 relative group hover:bg-slate-50/30 transition-colors cursor-pointer" [class]="getCurrentHourClass(hour)" (click)="onTimeSlotClick(hour)">
               <div class="absolute inset-0 pointer-events-none border-b border-slate-100/50"></div>
             </div>
           }

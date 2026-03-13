@@ -8,7 +8,6 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
 
 @Component({
   selector: 'app-calendar-page',
-  standalone: true,
   imports: [CommonModule, DayViewComponent, WeekViewComponent, AppointmentModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -36,14 +35,14 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
                 <button
                   (click)="setViewMode('day')"
                   [class]="viewMode() === 'day' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'"
-                  class="px-2.5 sm:px-5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all duration-200"
+                  class="px-2.5 sm:px-5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all duration-200 cursor-pointer"
                 >
                   Día
                 </button>
                 <button
                   (click)="setViewMode('week')"
                   [class]="viewMode() === 'week' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'"
-                  class="px-2.5 sm:px-5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all duration-200"
+                  class="px-2.5 sm:px-5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-semibold transition-all duration-200 cursor-pointer"
                 >
                   Semana
                 </button>
@@ -52,7 +51,7 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
               <!-- Mobile Add Button (Icon only) -->
               <button
                 (click)="openCreateModal()"
-                class="sm:hidden flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-xl shadow-md shadow-blue-200 transition-all active:scale-95 shrink-0"
+                class="sm:hidden flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-xl shadow-md shadow-blue-200 transition-all active:scale-95 shrink-0 cursor-pointer"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
@@ -75,7 +74,7 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
             <div class="flex items-center bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0">
               <button
                 (click)="navigatePrevious()"
-                class="p-1.5 sm:p-2.5 hover:bg-slate-50 transition-colors text-slate-600 border-r border-slate-100"
+                class="p-1.5 sm:p-2.5 hover:bg-slate-50 transition-colors text-slate-600 border-r border-slate-100 cursor-pointer"
               >
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
@@ -84,14 +83,14 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
 
               <button
                 (click)="navigateToday()"
-                class="px-2 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors uppercase tracking-wider"
+                class="px-2 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors uppercase tracking-wider cursor-pointer"
               >
                 Hoy
               </button>
 
               <button
                 (click)="navigateNext()"
-                class="p-1.5 sm:p-2.5 hover:bg-slate-50 transition-colors text-slate-600 border-l border-slate-100"
+                class="p-1.5 sm:p-2.5 hover:bg-slate-50 transition-colors text-slate-600 border-l border-slate-100 cursor-pointer"
               >
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
@@ -102,7 +101,7 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
             <!-- Desktop Add Button -->
             <button
               (click)="openCreateModal()"
-              class="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 transition-all duration-200 font-bold active:scale-95 whitespace-nowrap"
+              class="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 transition-all duration-200 font-bold active:scale-95 whitespace-nowrap cursor-pointer"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
@@ -122,6 +121,7 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
               [date]="selectedDate()"
               [appointments]="appointments()"
               (selectAppointment)="openEditModal($event)"
+              (createAtTime)="openCreateModalWithTime($event)"
             />
           } @else {
             <app-week-view
@@ -129,6 +129,7 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
               [startDate]="weekStartDate()"
               [appointments]="appointments()"
               (selectAppointment)="openEditModal($event)"
+              (createAtTime)="openCreateModalWithTime($event)"
             />
           }
         </div>
@@ -137,6 +138,7 @@ import { AppointmentService } from '@app/features/appointments/services/appointm
       @if (showModal()) {
         <app-appointment-modal
           [appointment]="selectedAppointment()"
+          [initialDate]="pendingCreateDate()"
           (close)="closeModal()"
           (saved)="onAppointmentSaved($event)"
           (deleted)="onAppointmentDeleted($event)"
@@ -150,6 +152,7 @@ export class CalendarPageComponent {
 
   showModal = signal(false);
   selectedAppointment = signal<Appointment | null>(null);
+  pendingCreateDate = signal<Date | null>(null);
 
   appointments = this.appointmentService.filteredAppointments;
   selectedDate = this.appointmentService.selectedDate;
@@ -200,6 +203,13 @@ export class CalendarPageComponent {
 
   openCreateModal(): void {
     this.selectedAppointment.set(null);
+    this.pendingCreateDate.set(null);
+    this.showModal.set(true);
+  }
+
+  openCreateModalWithTime(date: Date): void {
+    this.selectedAppointment.set(null);
+    this.pendingCreateDate.set(date);
     this.showModal.set(true);
   }
 
@@ -211,6 +221,7 @@ export class CalendarPageComponent {
   closeModal(): void {
     this.showModal.set(false);
     this.selectedAppointment.set(null);
+    this.pendingCreateDate.set(null);
   }
 
   onAppointmentSaved(appointment: Appointment): void {

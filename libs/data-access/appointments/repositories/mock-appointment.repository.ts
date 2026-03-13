@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Appointment } from '@app/domain/appointments/models/appointment.model';
-import { AppointmentStatus } from '@app/domain/appointments/enums/appointment-status.enum';
 import { IAppointmentRepository } from '@app/domain/appointments/repositories/appointment.repository.interface';
 
 @Injectable({
@@ -9,66 +8,6 @@ import { IAppointmentRepository } from '@app/domain/appointments/repositories/ap
 export class MockAppointmentRepository implements IAppointmentRepository {
   private appointments: Appointment[] = [];
   private idCounter = 1;
-
-  private teamMembers = ['Ana García', 'Carlos López', 'María Rodríguez', 'Juan Martínez'];
-  private services = ['Corte de cabello', 'Coloración', 'Manicure', 'Pedicure', 'Tratamiento facial', 'Masaje'];
-  private clients = [
-    'Laura Sánchez',
-    'Pedro Hernández',
-    'Sofia Torres',
-    'Diego Ramírez',
-    'Valentina Cruz',
-    'Andrés Flores',
-    'Camila Vargas',
-    'Mateo Castro',
-  ];
-
-  constructor() {
-    this.generateMockData();
-  }
-
-  private generateMockData(): void {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    for (let day = 0; day < 7; day++) {
-      const currentDate = new Date(today);
-      currentDate.setDate(today.getDate() + day);
-
-      this.teamMembers.forEach((teamMember, memberIndex) => {
-        const dailyAppointments = Math.floor(Math.random() * 4) + 2;
-
-        for (let i = 0; i < dailyAppointments; i++) {
-          const startHour = 9 + i * 2 + Math.floor(Math.random() * 2);
-          const duration = 30 + Math.floor(Math.random() * 3) * 30;
-
-          const startTime = new Date(currentDate);
-          startTime.setHours(startHour, Math.floor(Math.random() * 4) * 15, 0);
-
-          const endTime = new Date(startTime);
-          endTime.setMinutes(startTime.getMinutes() + duration);
-
-          const clientIndex = Math.floor(Math.random() * this.clients.length);
-          const serviceIndex = Math.floor(Math.random() * this.services.length);
-          const statusValues = Object.values(AppointmentStatus);
-          const status = statusValues[Math.floor(Math.random() * statusValues.length)];
-
-          this.appointments.push({
-            id: `apt-${this.idCounter++}`,
-            clientName: this.clients[clientIndex],
-            serviceName: this.services[serviceIndex],
-            teamMember,
-            startTime,
-            endTime,
-            status,
-            notes: Math.random() > 0.7 ? 'Notas del cliente aquí' : undefined,
-          });
-        }
-      });
-    }
-
-    this.appointments.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
-  }
 
   getAll(): Appointment[] {
     return [...this.appointments];

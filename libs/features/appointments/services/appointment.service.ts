@@ -36,27 +36,34 @@ export class AppointmentService {
   readonly selectedDate = computed(() => this.selectedDateSignal());
   readonly viewMode = computed(() => this.viewModeSignal());
 
-  readonly teamMembers = computed(() => {
-    const members = new Set(this.appointmentsSignal().map((apt) => apt.teamMember));
-    return Array.from(members);
-  });
+  readonly teamMembers = signal([
+    'Ana García', 'Carlos López', 'María Rodríguez', 'Juan Martínez'
+  ]);
 
-  readonly services = computed(() => {
-    const services = new Set(this.appointmentsSignal().map((apt) => apt.serviceName));
-    return Array.from(services);
-  });
+  readonly services = signal([
+    'Corte de cabello', 'Coloración', 'Manicure', 'Pedicure', 'Tratamiento facial', 'Masaje'
+  ]);
 
   readonly filteredAppointments = computed(() => {
+    const allAppointments = this.appointmentsSignal();
     const date = this.selectedDateSignal();
     const mode = this.viewModeSignal();
 
     if (mode === 'day') {
-      return this.repository.getByDate(date);
+      const targetDate = new Date(date);
+      targetDate.setHours(0, 0, 0, 0);
+      const nextDay = new Date(targetDate);
+      nextDay.setDate(targetDate.getDate() + 1);
+      return allAppointments.filter(
+        (apt) => apt.startTime >= targetDate && apt.startTime < nextDay
+      );
     } else {
       const startOfWeek = getStartOfWeek(date);
       const endOfWeek = new Date(startOfWeek);
       endOfWeek.setDate(startOfWeek.getDate() + 7);
-      return this.repository.getByDateRange(startOfWeek, endOfWeek);
+      return allAppointments.filter(
+        (apt) => apt.startTime >= startOfWeek && apt.startTime <= endOfWeek
+      );
     }
   });
 

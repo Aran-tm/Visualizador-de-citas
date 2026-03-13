@@ -7,7 +7,6 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
 
 @Component({
   selector: 'app-appointment-modal',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -25,7 +24,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
               {{ isEditing() ? 'Detalles de la Cita' : 'Programar Nueva Cita' }}
             </h2>
           </div>
-          <button (click)="onClose()" class="text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-xl">
+          <button (click)="onClose()" class="text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-xl cursor-pointer">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -65,7 +64,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
                 <label class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1">Servicio</label>
                 <select
                   formControlName="serviceName"
-                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
+                  class="custom-select w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
                 >
                   <option value="">Seleccionar...</option>
                   @for (service of services(); track service) {
@@ -78,7 +77,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
                 <label class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1">Personal</label>
                 <select
                   formControlName="teamMember"
-                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
+                  class="custom-select w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
                 >
                   <option value="">Seleccionar...</option>
                   @for (member of teamMembers(); track member) {
@@ -94,7 +93,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
                 <input
                   type="date"
                   formControlName="date"
-                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700"
+                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
                 />
               </div>
 
@@ -102,7 +101,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
                 <label class="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 ml-1">Estado</label>
                 <select
                   formControlName="status"
-                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
+                  class="custom-select w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
                 >
                   @for (status of statusOptions; track status.value) {
                     <option [value]="status.value">{{ status.label }}</option>
@@ -117,7 +116,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
                 <input
                   type="time"
                   formControlName="startTime"
-                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700"
+                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
                 />
               </div>
 
@@ -126,7 +125,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
                 <input
                   type="time"
                   formControlName="endTime"
-                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700"
+                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:bg-white outline-none transition-all font-medium text-slate-700 cursor-pointer"
                 />
               </div>
             </div>
@@ -149,7 +148,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
             <button
               type="button"
               (click)="onDelete()"
-              class="px-6 py-3 bg-rose-50 text-rose-600 rounded-2xl hover:bg-rose-100 transition-all font-bold text-sm active:scale-95"
+              class="px-6 py-3 bg-rose-50 text-rose-600 rounded-2xl hover:bg-rose-100 transition-all font-bold text-sm active:scale-95 cursor-pointer"
             >
               Eliminar Cita
             </button>
@@ -158,7 +157,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
           <button
             type="button"
             (click)="onClose()"
-            class="px-6 py-3 text-slate-600 font-bold text-sm hover:bg-slate-100 rounded-2xl transition-all active:scale-95"
+            class="px-6 py-3 text-slate-600 font-bold text-sm hover:bg-slate-100 rounded-2xl transition-all active:scale-95 cursor-pointer"
           >
             Cerrar
           </button>
@@ -166,7 +165,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
             type="submit"
             (click)="onSubmit()"
             [disabled]="form.invalid || isSubmitting()"
-            class="px-8 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold text-sm active:scale-95"
+            class="px-8 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold text-sm active:scale-95 cursor-pointer"
           >
             {{ isSubmitting() ? 'Guardando...' : (isEditing() ? 'Actualizar Cita' : 'Confirmar Cita') }}
           </button>
@@ -177,6 +176,7 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
 })
 export class AppointmentModalComponent {
   appointment = input<Appointment | null>(null);
+  initialDate = input<Date | null>(null);
   close = output<void>();
   saved = output<Appointment>();
   deleted = output<string>();
@@ -212,6 +212,8 @@ export class AppointmentModalComponent {
   constructor() {
     effect(() => {
       const appointment = this.appointment();
+      const initialDate = this.initialDate();
+      
       if (appointment) {
         this.isEditing.set(true);
         const startDate = new Date(appointment.startTime);
@@ -229,11 +231,28 @@ export class AppointmentModalComponent {
         });
       } else {
         this.isEditing.set(false);
+        
+        let dateToUse = new Date();
+        let startTimeToUse = '';
+        let endTimeToUse = '';
+
+        if (initialDate) {
+          dateToUse = new Date(initialDate);
+          startTimeToUse = this.formatTimeForInput(initialDate);
+          
+          const end = new Date(initialDate);
+          end.setHours(end.getHours() + 1);
+          endTimeToUse = this.formatTimeForInput(end);
+        }
+
         this.form.reset({
           status: AppointmentStatus.Pending,
+          date: initialDate ? this.formatDateForInput(dateToUse) : '',
+          startTime: startTimeToUse,
+          endTime: endTimeToUse,
         });
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   private formatDateForInput(date: Date): string {
