@@ -290,7 +290,10 @@ export class AppointmentModalComponent {
   }
 
   private formatDateForInput(date: Date): string {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private formatTimeForInput(date: Date): string {
@@ -307,12 +310,12 @@ export class AppointmentModalComponent {
     const date = formValue.date!;
     const [startHour, startMinute] = formValue.startTime!.split(':').map(Number);
     const [endHour, endMinute] = formValue.endTime!.split(':').map(Number);
+    
+    // Use local timezone explicitly
+    const [year, month, day] = date.split('-').map(Number);
 
-    const startTime = new Date(date);
-    startTime.setHours(startHour, startMinute, 0, 0);
-
-    const endTime = new Date(date);
-    endTime.setHours(endHour, endMinute, 0, 0);
+    const startTime = new Date(year, month - 1, day, startHour, startMinute, 0, 0);
+    const endTime = new Date(year, month - 1, day, endHour, endMinute, 0, 0);
 
     const dto: CreateAppointmentDto = {
       clientName: formValue.clientName!,
