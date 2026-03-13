@@ -203,9 +203,18 @@ import { AppointmentService, CreateAppointmentDto, ValidationError } from '../..
               <button 
                 type="button" 
                 (click)="onConfirmDelete()" 
-                class="px-5 py-2.5 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 hover:shadow-lg hover:shadow-rose-200 transition-all active:scale-95 cursor-pointer"
+                [disabled]="isDeleting()"
+                class="px-5 py-2.5 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 hover:shadow-lg hover:shadow-rose-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
               >
-                Sí, eliminar
+                @if (isDeleting()) {
+                  <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Eliminando...</span>
+                } @else {
+                  <span>Sí, eliminar</span>
+                }
               </button>
             </div>
           </div>
@@ -235,6 +244,7 @@ export class AppointmentModalComponent {
 
   isEditing = signal(false);
   isSubmitting = signal(false);
+  isDeleting = signal(false);
   showDeleteConfirm = signal(false);
   errors = signal<ValidationError[]>([]);
   teamMembers = this.appointmentService.teamMembers;
@@ -356,9 +366,15 @@ export class AppointmentModalComponent {
   }
 
   onConfirmDelete(): void {
-    if (!this.isEditing()) return;
-    this.deleted.emit(this.appointment()!.id);
-    this.showDeleteConfirm.set(false);
+    if (!this.isEditing() || this.isDeleting()) return;
+    this.isDeleting.set(true);
+    
+    // Simular carga al eliminar
+    setTimeout(() => {
+      this.deleted.emit(this.appointment()!.id);
+      this.isDeleting.set(false);
+      this.showDeleteConfirm.set(false);
+    }, 800);
   }
 
   onClose(): void {
