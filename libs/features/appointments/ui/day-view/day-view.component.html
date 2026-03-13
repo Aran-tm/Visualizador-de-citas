@@ -1,0 +1,40 @@
+    <div class="flex flex-col h-full bg-white select-none">
+      <!-- Day View Header -->
+      <div class="flex items-center px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 bg-slate-50/50 shrink-0">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-800">
+          {{ date() | date: 'EEEE d' }} <span class="text-slate-400 font-medium whitespace-nowrap">de {{ date() | date: 'MMMM, y' }}</span>
+        </h2>
+      </div>
+
+      <!-- Scrollable area: time column + grid scroll together -->
+      <div class="flex flex-1 overflow-y-auto" #timeGrid>
+        <div class="flex w-full h-[1920px]">
+          <!-- Time Column (24 hours * 80px = 1920px) -->
+          <div class="w-14 sm:w-20 shrink-0 border-r border-slate-100 bg-slate-50/30">
+            @for (hour of hours; track hour) {
+              <div class="h-20 flex items-start justify-center pt-3 text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-tighter">
+                {{ formatHour(hour) }}
+              </div>
+            }
+          </div>
+
+          <!-- Grid Area -->
+          <div class="flex-1 relative bg-[linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:100%_80px]">
+            @for (hour of hours; track hour) {
+              <div class="h-20 relative group hover:bg-slate-50/30 transition-colors cursor-pointer" [class]="getCurrentHourClass(hour)" (click)="onTimeSlotClick(hour)">
+                <div class="absolute inset-0 pointer-events-none border-b border-slate-100/50"></div>
+              </div>
+            }
+
+            @for (appointment of dayAppointments(); track appointment.id) {
+              <div
+                class="absolute rounded-xl overflow-hidden cursor-pointer animate-fade-in z-10 hover:z-20 transition-all duration-300"
+                [ngStyle]="getAppointmentStyle(appointment)"
+              >
+                <app-appointment-card [appointment]="appointment" (clickAppointment)="onAppointmentClick($event)" />
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
