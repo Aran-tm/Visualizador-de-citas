@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Appointment } from '@app/domain/appointments/models/appointment.model';
 import { AppointmentCardComponent } from '../appointment-card/appointment-card.component';
@@ -83,7 +83,7 @@ export class WeekViewComponent {
   private collisionGroups = new Map<string, { groupIndex: number; totalColumns: number }>();
   private calculatedAppointments = new Map<string, Appointment[]>();
 
-  weekDays(): DayColumn[] {
+  weekDays = computed(() => {
     const start = new Date(this.startDate());
     const days: DayColumn[] = [];
     const today = new Date();
@@ -112,7 +112,7 @@ export class WeekViewComponent {
     });
 
     return days;
-  }
+  });
 
   formatHour(hour: number): string {
     return `${hour.toString().padStart(2, '0')}:00`;

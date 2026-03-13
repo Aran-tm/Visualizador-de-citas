@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Appointment } from '@app/domain/appointments/models/appointment.model';
 import { AppointmentCardComponent } from '../appointment-card/appointment-card.component';
@@ -62,13 +62,13 @@ export class DayViewComponent {
   // Lógica de colisión
   private collisionGroups = new Map<string, { groupIndex: number; totalColumns: number }>();
 
-  dayAppointments() {
+  dayAppointments = computed(() => {
     const list = [...this.appointments()].sort(
       (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
     );
     this.calculateCollisions(list);
     return list;
-  }
+  });
 
   formatHour(hour: number): string {
     return `${hour.toString().padStart(2, '0')}:00`;
