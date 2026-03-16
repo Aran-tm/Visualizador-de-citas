@@ -25,7 +25,7 @@ La aplicación estará disponible en `http://localhost:4200`.
 
 ## 🏗️ Arquitectura del Proyecto
 
-El proyecto sigue una **arquitectura por capas** inspirada en Domain-Driven Design (DDD), organizada dentro de la carpeta `libs/`:
+El proyecto sigue una **arquitectura basada en dominios**, organizada dentro de la carpeta `libs/`:
 
 ```
 visualizador_citas/
