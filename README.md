@@ -1,6 +1,6 @@
 # 📅 Visualizador de Citas
 
-Una aplicación de gestión de citas estética/profesional construida con **Angular 21** usando los últimos patrones modernos: Signals, componentes standalone, arquitectura por capas y persistencia local.
+Una aplicación de gestión de citas estética/profesional construida con **Angular 21** usando los últimos patrones modernos: Signals, componentes standalone, arquitectura basada en dominio y persistencia local.
 
 ---
 
